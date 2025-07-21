@@ -1,19 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
 
-export default () => {
+export default function CounterWithHooks() {
   const [counter, setCounter] = useState(0);
-
-  /* Redux 'Connect' */
-  const reduxState = useSelector(state => state);
-  const reduxCounter = reduxState.counter;
-
-  const dispatch = useDispatch();
-
-  const handleClick = () => {
-    setCounter(counter + 1);
-    dispatch({ type: "INCREMENT" });
-  };
 
   useEffect(() => {
     console.log("cambio counter");
@@ -21,14 +9,8 @@ export default () => {
 
   return (
     <>
-      <h2>
-        {counter}
-        {/*
-        {reduxCounter}
-        */}
-      </h2>
-
-      <button onClick={handleClick}>Incrementar con hook</button>
+      <h2>{counter}</h2>
+      <button onClick={() => setCounter(counter + 1)}>Incrementar con hook</button>
     </>
   );
-};
+}
