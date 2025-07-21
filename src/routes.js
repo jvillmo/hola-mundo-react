@@ -1,37 +1,32 @@
 import React from "react";
 import {
-  BrowserRouter as Router,
+  BrowserRouter,
+  Routes as RouterRoutes,
   Route,
   Link,
-  Switch,
-  Redirect
+  Navigate
 } from "react-router-dom";
 import Home from "./pages/home";
 import App from "./components/App";
 
 export default function Routes() {
   return (
-      <>
-        <Router>
-          <Link className="btn btn-success m-1" to="/home">
-            home
-          </Link>
+    <>
+      <BrowserRouter>
+        <Link className="btn btn-success m-1" to="/home">
+          home
+        </Link>
 
-          <Link className="btn btn-success m-1" to="/app">
-            app
-          </Link>
+        <Link className="btn btn-success m-1" to="/app">
+          app
+        </Link>
 
-          <Redirect exact from="/" to="/home" />
-
-          <Switch>
-            <Route path="/app">
-              {<App />}
-            </Route>
-            <Route path="/home">
-              {<Home />}
-            </Route>
-          </Switch>
-        </Router>
-      </>
-    );
+        <RouterRoutes>
+          <Route path="/" element={<Navigate to="/home" replace />} />
+          <Route path="/app" element={<App />} />
+          <Route path="/home" element={<Home />} />
+        </RouterRoutes>
+      </BrowserRouter>
+    </>
+  );
 }
