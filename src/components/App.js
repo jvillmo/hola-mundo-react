@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import HolaMundo from "./holamundo";
 import TodoList from "./todo";
 import Counter from "./counter";
@@ -7,81 +7,48 @@ import ConterWithHooks from "./counterWithHooks";
 
 import MovieList from "./movieList";
 
-import { connect } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import "../css/styles.css";
 
 import CounterHook from "./counterHook";
 
-class App extends React.Component {
-  state = {
-    list: ["a", "b"],
-    counter: 100
-  };
+export default function App() {
+  const [list, setList] = useState(["a", "b"]);
+  const [counter, setCounter] = useState(100);
+  const dispatch = useDispatch();
 
-  handleAgregarClick = () => {
-    console.log("agregar");
-
-    let newTodo = prompt("Nueva tarea");
+  const handleAgregarClick = () => {
+    const newTodo = prompt("Nueva tarea");
     if (newTodo) {
-      this.setState({
-        list: [...this.state.list, newTodo]
-      });
+      setList([...list, newTodo]);
     }
   };
 
-  handleIncrementarClick = () => {
-    console.log("incrementar");
-    let counter = this.state.counter;
-
-    this.setState({
-      counter: counter + 1
-    });
-
-    console.log("counter", this.state.counter);
-    this.props.increment();
+  const handleIncrementarClick = () => {
+    setCounter(counter + 1);
+    dispatch({ type: "INCREMENT" });
   };
 
-  render = () => {
-    return (
-      <div className="App">
-        <MovieList />
-        {/*
-        <HolaMundo />
-        <ConterWithHooks />
-        <ReduxCounter />
-        <button onClick={this.handleIncrementarClick}>incrementar</button>
-        <Counter counter={this.state.counter} />
-        <CounterHook counter={this.state.counter} />
-        <h2>{this.state.counter}</h2>
-        <TodoList list={this.state.list} />
-        <ul>
+  return (
+    <div className="App">
+      <MovieList />
+      {/*
+      <HolaMundo />
+      <ConterWithHooks />
+      <ReduxCounter />
+      <button onClick={handleIncrementarClick}>incrementar</button>
+      <Counter counter={counter} />
+      <CounterHook counter={counter} />
+      <h2>{counter}</h2>
+      <TodoList list={list} />
+      <ul>
         <li>
-        <button onClick={this.handleAgregarClick}>agregar</button>
+          <button onClick={handleAgregarClick}>agregar</button>
         </li>
-        <li>
-        </li>
-        </ul>
+        <li></li>
+      </ul>
       */}
-      </div>
-    );
-  };
+    </div>
+  );
 }
-
-const mapStateToProps = () => {
-  return {};
-};
-
-const mapDispatchToProps = dispatch => {
-  return {
-    increment: () => dispatch({ type: `INCREMENT` }),
-    decrement: () => dispatch({ type: `DECREMENT` })
-  };
-};
-
-const ConnectedApp = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(App);
-
-export default ConnectedApp;
