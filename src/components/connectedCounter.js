@@ -1,26 +1,15 @@
 import React from "react";
-import { connect } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
-class Counter extends React.Component {
-  render = () => {
-    let count = this.props.counter;
-    return <h1>{count}</h1>;
-  };
+export default function ConnectedCounter() {
+  const counter = useSelector(({ counter }) => counter);
+  const dispatch = useDispatch();
+
+  return (
+    <div>
+      <h1>{counter}</h1>
+      <button onClick={() => dispatch({ type: "INCREMENT" })}>Increment</button>
+      <button onClick={() => dispatch({ type: "DECREMENT" })}>Decrement</button>
+    </div>
+  );
 }
-const mapStateToProps = ({ counter }) => {
-  return { counter };
-};
-
-const mapDispatchToProps = dispatch => {
-  return {
-    increment: () => dispatch({ type: `INCREMENT` }),
-    decrement: () => dispatch({ type: `DECREMENT` })
-  };
-};
-
-const ConnectedCounter = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Counter);
-
-export default ConnectedCounter;
