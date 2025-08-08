@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import MovieItem from "./movieItem";
 
 const APIKEY = "b4fe0c22fecb27296c885c1704957547";
@@ -10,28 +10,36 @@ export default function MoviesList() {
   const [error, setError] = useState(null);
   const [lastLoad, setLastLoad] = useState(null);
 
-  const fetchMovies = (search) => {
+  const fetchMovies = useCallback(async (search) => {
     setLoading(true);
     setError(null);
-    let url = `https://api.themoviedb.org/3/${search ? "search/movie" : "movie/now_playing"}?api_key=${APIKEY}&language=es-MX`;
+
+    const url = new URL(
+      `https://api.themoviedb.org/3/${search ? "search/movie" : "movie/now_playing"}`
+    );
+    url.searchParams.set("api_key", APIKEY);
+    url.searchParams.set("language", "es-MX");
     if (search) {
-      url += `&query=${encodeURIComponent(search)}`;
+      url.searchParams.set("query", search);
     }
-    fetch(url)
-      .then((res) => res.json())
-      .then((data) => {
-        setMovies(data.results || []);
-        setLastLoad(new Date().toLocaleString());
-      })
-      .catch((e) => setError(e))
-      .finally(() => setLoading(false));
-  };
+
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+      setMovies(data.results || []);
+      setLastLoad(new Date().toLocaleString());
+    } catch (e) {
+      setError(e);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
     fetchMovies("");
-  }, []);
+  }, [fetchMovies]);
 
-  const LookupForMovies = () => {
+  const lookupForMovies = () => {
     fetchMovies(query);
   };
 
@@ -46,16 +54,16 @@ export default function MoviesList() {
             className="form-control"
             type="text"
             value={query}
-            onKeyPress={(event) => {
-              if (event.charCode === 13) {
-                LookupForMovies();
+            onKeyDown={(event) => {
+              if (event.key === "Enter") {
+                lookupForMovies();
               }
             }}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Ingrese aqui la película que desea buscar"
           />
         </div>
-        <button className="btn btn-primary" onClick={LookupForMovies}>
+        <button className="btn btn-primary" onClick={lookupForMovies}>
           Load Movies
         </button>
       </div>

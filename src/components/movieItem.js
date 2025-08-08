@@ -1,7 +1,4 @@
-import React from "react";
-
-export default props => {
-  const { movie } = props;
+export default function MovieItem({ movie }) {
   return (
     <div className="card">
       <div className="row no-gutters">
@@ -31,4 +28,4 @@ export default props => {
       </div>
     </div>
   );
-};
+}
